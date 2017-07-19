@@ -481,11 +481,20 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
   var scrollTop = (document.body.scrollTop / 1250);
+  var phase = 0;
+      phasearr = [];
+      bleft = 0;
+  for (var i = 0; i < 5; i++) {
+    phase = 100 * Math.sin(scrollTop + (i % 5));
+    phasearr.push(phase);
+  };
+
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin(scrollTop + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-    // var bleft = items[i].basicLeft + 100 * phase;
-    // items[i].style.transform = 'translate3d(' + bleft + 'px, 0px, 0px)';
+    // phase = Math.sin(scrollTop + (i % 5));
+    // items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+
+    bleft = basicLeftArr[i%cols] + phasearr[i%5];
+    items[i].style.transform = 'translate3d(' + bleft + 'px, 0px, 0px)';
   }
 
   // 再次使用User Timing API。这很值得学习
@@ -506,18 +515,22 @@ window.addEventListener('scroll', function(){
 
 // 当页面加载时生成披萨滑窗
 var items = [];
+var basicLeftArr = [];
+var cols = 8;
 document.addEventListener('DOMContentLoaded', function() {
-  var cols = 8;
   var s = 256;
   var movingPizzas1 = document.getElementById("movingPizzas1");
   var top1 = 0;
+  for (var i = 0; i < cols; i++) {
+    basicLeftArr.push((i % cols) * s);
+  };
   for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
+    elem.basicLeft = basicLeftArr[i%cols];
     if (i%cols === 0) {
       top1 = (Math.floor(i / cols) * s) + 'px';
     }
