@@ -484,6 +484,8 @@ function updatePositions() {
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin(scrollTop + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    // var bleft = items[i].basicLeft + 100 * phase;
+    // items[i].style.transform = 'translate3d(' + bleft + 'px, 0px, 0px)';
   }
 
   // 再次使用User Timing API。这很值得学习
@@ -508,6 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var movingPizzas1 = document.getElementById("movingPizzas1");
+  var top1 = 0;
   for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -515,7 +518,10 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    if (i%cols === 0) {
+      top1 = (Math.floor(i / cols) * s) + 'px';
+    }
+    elem.style.top = top1;
     movingPizzas1.appendChild(elem);
   }
   items = document.querySelectorAll('.mover');
