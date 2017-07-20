@@ -489,7 +489,7 @@ function updatePositions() {
     phasearr.push(phase);
   };
 
-  for (var i = 0; i < items.length; i++) {
+  for (var i = 0; i < itemsLen; i++) {
     // phase = Math.sin(scrollTop + (i % 5));
     // items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
 
@@ -513,10 +513,11 @@ window.addEventListener('scroll', function(){
   window.requestAnimationFrame(updatePositions);
 });
 
+var items = [],
+    itemsLen = 0,
+    basicLeftArr = [],
+    cols = 8;
 // 当页面加载时生成披萨滑窗
-var items = [];
-var basicLeftArr = [];
-var cols = 8;
 document.addEventListener('DOMContentLoaded', function() {
   var s = 256;
   var movingPizzas1 = document.getElementById("movingPizzas1");
@@ -538,6 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
     movingPizzas1.appendChild(elem);
   }
   items = document.querySelectorAll('.mover');
+  itemsLen = items.length;
   // window.requestAnimationFrame(updatePositions);
   updatePositions();
 });
