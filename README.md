@@ -11,9 +11,9 @@
 ### 优化概述
 
 #### index.html
-	1.异步加载谷歌字体
-	2.css内联
-	3.js脚本加上async，异步加载
-	4.使用pagespeed中提供的优化后的图片以及压缩后的js文件（之前也用过gulp来压缩图片和文件，结果pagespeed还是提示图片压缩的不够，所以就直接用pagespeed里面提供的图片和文件了）
+1.异步加载谷歌字体
+2.css内联
+3.js脚本加上async，异步加载
+4.使用pagespeed中提供的优化后的图片以及压缩后的js文件（之前也用过gulp来压缩图片和文件，结果pagespeed还是提示图片压缩的不够，所以就直接用pagespeed里面提供的图片和文件了）
 
 #### pizza.html
