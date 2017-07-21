@@ -476,27 +476,42 @@ function logAverageFrame(times) {   // times参数是updatePositions()由User Ti
 // 下面的关于背景滑窗披萨的代码来自于Ilya的demo:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
+// 监听animation frame，用raf代替scroll事件
+var scroll = window.requestAnimationFrame ||
+             window.webkitRequestAnimationFrame ||
+             window.mozRequestAnimationFrame ||
+             window.msRequestAnimationFrame ||
+             window.oRequestAnimationFrame ||
+             // IE Fallback, you can even fallback to onscroll
+             function(callback){ window.setTimeout(callback, 1000/60) };
+
 // 基于滚动条位置移动背景中的披萨滑窗
-function updatePositions() {
+var lastPosition = -1;
+function updatePositions() {  
+  if (lastPosition == window.pageYOffset) {
+      scroll(updatePositions)
+      return false
+  } else lastPosition = window.pageYOffset
+
   frame++;
   window.performance.mark("mark_start_frame");
   var scrollTop = (document.body.scrollTop / 1250);
-  var phase = 0;
-      phasearr = [];
+  var phase = 0,
+      phasearr = [],
       bleft = 0;
   for (var i = 0; i < 5; i++) {
     phase = 100 * Math.sin(scrollTop + (i % 5));
     phasearr.push(phase);
   };
 
-  for (var i = 0; i < itemsLen; i++) {
+  for (var i = 0; i < samllPizzaLen; i++) {
     // phase = Math.sin(scrollTop + (i % 5));
     // items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
 
     bleft = basicLeftArr[i%cols] + phasearr[i%5];
     items[i].style.transform = 'translate3d(' + bleft + 'px, 0px, 0px)';
   }
-
+  scroll(updatePositions);
   // 再次使用User Timing API。这很值得学习
   // 能够很容易地自定义测量维度
   window.performance.mark("mark_end_frame");
@@ -507,39 +522,33 @@ function updatePositions() {
   }
 }
 
-
-// 在页面滚动时运行updatePositions函数
-window.addEventListener('scroll', function(){
-  window.requestAnimationFrame(updatePositions);
-});
-
-var items = [],
-    itemsLen = 0,
-    basicLeftArr = [],
-    cols = 8;
+var cols = 8,
+    samllPizzaLen = 0,
+    basicLeftArr = [];
 // 当页面加载时生成披萨滑窗
 document.addEventListener('DOMContentLoaded', function() {
-  var s = 256;
+  var s = 256,
+      top1 = 0;
+  // 屏幕可用高度
+  var webHeight = window.innerHeight
+                  || document.documentElement.clientHeight
+                  || document.body.clientHeight;
   var movingPizzas1 = document.getElementById("movingPizzas1");
-  var top1 = 0;
-  for (var i = 0; i < cols; i++) {
+  //小pizza的个数
+  samllPizzaLen = Math.ceil(webHeight / s) * cols;
+  //left数组，后面updatePositions函数会调用
+  for (let i = 0; i < cols; i++) {
     basicLeftArr.push((i % cols) * s);
   };
-  for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
-    elem.className = 'mover';
-    elem.src = "images/pizza.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
-    elem.basicLeft = basicLeftArr[i%cols];
+  var imgHtml = "";
+  //改为字符串拼接
+  for (let i = 0; i < samllPizzaLen; i++) {
     if (i%cols === 0) {
       top1 = (Math.floor(i / cols) * s) + 'px';
     }
-    elem.style.top = top1;
-    movingPizzas1.appendChild(elem);
+    imgHtml += '<img class="mover" src="images/pizza.png" style="height: 100px; width: 73.333px; top: ' + top1 + '">';
   }
-  items = document.querySelectorAll('.mover');
-  itemsLen = items.length;
-  // window.requestAnimationFrame(updatePositions);
+  movingPizzas1.innerHTML = imgHtml;
+  window.items = document.querySelectorAll('.mover');
   updatePositions();
 });
