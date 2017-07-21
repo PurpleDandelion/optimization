@@ -20,6 +20,6 @@
 1. 按需加载pizza数。通过屏幕可用高度、行高以及一行显示pizza的个数，计算出在可视区中有多少个小pizza。因为实际上可视区外多余的小pizza并没有什么用，反而还增加合成操作。
 2. 用getElementById代替querySelector，并把循环内的获取dom元素操作移到循环外面。
 3. 刚开始生成pizza的时候，用字符串拼接html代替dom创建元素。
-4. transform代替left去移动pizza，避免重绘
+4. transform代替left去移动pizza，避免重绘。
 5. 用requestAnimationFrame代替监听scroll事件，使得scroll更高效。
 6. 修改pizza大小的时候，去掉不必要的代码，直接获取pizza的width。
